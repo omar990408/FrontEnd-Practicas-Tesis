@@ -11,6 +11,28 @@
   <span class="example-spacer"></span>
 
   <a
+  *ngIf="loginService.isLoggedIn()"
+  (click) ="logOut()"
+  mat-icon-button
+  class = "example-icon favorite-icon"
+  aria-label = "Example icon-button with heart icon"
+>
+<mat-icon>logout</mat-icon>
+</a>
+
+<button
+*ngIf="loginService.isLoggedIn()"
+mat-icon-button
+style="font-size: 12px;"
+class = "example-icon favorite-icon"
+aria-label = "Example icon-button with heart icon"
+>
+<!-- <mat-icon>user</mat-icon> -->
+{{loginService.getUser().username}}
+</button>
+
+  <a
+  *ngIf="!loginService.isLoggedIn()"
   [routerLink]="'/login'"
   mat-icon-button
   class = "example-icon favorite-icon"
@@ -20,6 +42,7 @@
 </a>
 
 <a
+*ngIf="!loginService.isLoggedIn()"
 [routerLink]="'/signup'"
 mat-icon-button
 class="example-icon favorite-icon mr20 ml20"

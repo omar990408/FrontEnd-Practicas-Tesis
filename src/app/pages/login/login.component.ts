@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class LoginComponent {
     "password": ""
   }
 
-  constructor(private snack: MatSnackBar, private loginService : LoginService) { }
+  constructor(private snack: MatSnackBar, private loginService : LoginService, private router: Router ) { }
 
   formSubmit(){
     if(this.loginData.username.trim() == "" || this.loginData.username == null){
@@ -35,13 +36,24 @@ export class LoginComponent {
         this.loginService.loginUser(data.token);
         this.loginService.getCurrentUser().subscribe(
           (user:any) => { 
+            this.loginService.setUser(user);
             console.log(user);
+            if(this.loginService.getUserRole() == 'ADMIN'){
+              // window.location.href = '/admin';
+              this.router.navigate(['/admin']);
+            }else if(this.loginService.getUserRole() == 'NORMAL'){
+              // window.location.href = '/user-dashboard';
+              this.router.navigate(['/user-dashboard']);
+            }else{
+              this.loginService.logout();
+            }
           },error => {
             console.log(error);
           }
         );
       },error => {
         console.log(error);
+        this.snack.open("Datos incorrectos !!", "Aceptar", {duration: 3000});
       }
     )
   }
